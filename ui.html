@@ -1,0 +1,55 @@
+<script>
+    onmessage = (event) => {
+        document.getElementById('project_name').innerHTML = event.data.pluginMessage.projectMessage.project_name;
+        document.getElementById('proj_number').innerHTML = event.data.pluginMessage.projectMessage.proj_number;
+        document.getElementById('booked_days').innerHTML = event.data.pluginMessage.projectMessage.booked_days;
+        document.getElementById('days_todo').innerHTML = event.data.pluginMessage.projectMessage.days_todo;
+        document.getElementById('activity_skipped').innerHTML = event.data.pluginMessage.projectMessage.activity_skipped;
+
+        // console.log(event.data.pluginMessage.selection.length);
+    }
+</script>
+<style>
+    * {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 16px;
+    }
+
+    p {
+        display: inline;
+    }
+</style>
+<html>
+
+<body>
+    <p>Selected project: </p>
+    <p id="project_name"></p>
+
+    <br>
+    <br>
+
+    <p>Booked days: </p>
+    <p id="booked_days"></p>
+
+    <br>
+    <br>
+
+    <p>Days in tracker: </p>
+    <p id="proj_number"></p>
+
+    <br>
+    <br>
+
+    <p>Days to place in timeline: </p>
+    <p id="days_todo"></p>
+
+
+    <br>
+    <br>
+
+    <p>Skipped (wrong height): </p>
+    <p id="activity_skipped"></p>
+
+</body>
+
+</html>
