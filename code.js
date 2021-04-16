@@ -14,6 +14,7 @@ var summary_ds_days;
 var summary_dj_days;
 var summary_team_days;
 var total_days;
+var summary_color_code;
 // ------- ACTIVITY ------- //
 var activity_totalday_counter = 0;
 var activity_array;
@@ -39,6 +40,11 @@ function main() {
     }
     summary_selected_component = figma.currentPage.selection[0];
     summary_code_textnode = summary_selected_component.findOne(n => n.name === "summary_project_code");
+    summary_color_code = summary_selected_component.findOne(n => n.name === "summary_color_code").fills[0].color;
+
+    console.log("color: " + Math.round(summary_color_code.r*255) + " " + (summary_color_code.g*255));
+
+
     if (summary_code_textnode.type !== 'TEXT') {
         figma.closePlugin("nodo non riconosciuto (in realtà da fare bene questa gestione di errori)");
         return;
@@ -50,7 +56,7 @@ function main() {
     activity_array.forEach((activity) => {
         // activity_project_code = activity.findOne(n => n.name === "activity_project_code");
         // console.log(activity.children[4]);
-        activity_project_code = activity.children[4];
+        activity_project_code = activity.children[3].children[0].children[1];
         // if(( < 1){
         //     figma.closePlugin("nada")
         //     return
@@ -85,12 +91,15 @@ function main() {
             booked_days: total_days,
             proj_number: activity_totalday_counter,
             days_todo: days_todo,
-            activity_skipped: activity_skipped
+            activity_skipped: activity_skipped,
+            project_color_red: Math.round(summary_color_code.r*255),
+            project_color_green: Math.round(summary_color_code.g*255),
+            project_color_blue: Math.round(summary_color_code.b*255)
         }
     });
 }
 // ------- PROGRAM ------- //
-figma.showUI(__html__);
+figma.showUI(__html__, { width: 600, height: 280 });
 main();
 // draw();
 figma.closePlugin;

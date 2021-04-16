@@ -6,49 +6,114 @@
         document.getElementById('days_todo').innerHTML = event.data.pluginMessage.projectMessage.days_todo;
         document.getElementById('activity_skipped').innerHTML = event.data.pluginMessage.projectMessage.activity_skipped;
 
+        document.getElementById('project-color').style.backgroundColor = 'rgb(' + event.data.pluginMessage.projectMessage.project_color_red + ',' + event.data.pluginMessage.projectMessage.project_color_green + ',' + event.data.pluginMessage.projectMessage.project_color_blue + ')';
         // console.log(event.data.pluginMessage.selection.length);
     }
 </script>
-<style>
-    * {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 16px;
-    }
 
-    p {
-        display: inline;
-    }
-</style>
 <html>
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700&display=swap');
+
+    * {
+        font-family: 'Work Sans', sans-serif;
+        color: #282828;
+    }
+
+    body {
+        padding: 8px;
+    }
+
+    h1,
+    h2,
+    p {
+        margin: 0;
+    }
+
+    h1{
+        font-size: 40px;
+    }
+
+    .spacer {
+        height: 24px;
+        width: 100%;
+        clear: both;
+    }
+
+    .spacer-2 {
+        height: 48px;
+        width: 100%;
+        clear: both;
+    }
+
+    #prj-code-container {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .indicator-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .indicators {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        max-width: 550px;
+    }
+
+    .label {
+        color: #4e4e4e;
+    }
+
+    #project-color{
+        width: 10px;
+        height: 41px;
+        border-radius: 4px;
+        background-color: black;
+        margin-top: 5px;
+        margin-right: 8px;
+    }
+</style>
+
 <body>
-    <p>Selected project: </p>
-    <p id="project_name"></p>
+    <div id="prj-code-container">
+        <div id="project-color"></div>
+        <!-- <h1>[</h1> -->
+        <h1 id="project_name">
+        </h1>
+        <!-- <h1>]</h1> -->
+    </div>
 
-    <br>
-    <br>
+    <div class="spacer"></div>
 
-    <p>Booked days: </p>
-    <p id="booked_days"></p>
+    <div class="indicators">
+        <div class="indicator-container">
+            <h1 id="booked_days"></h1>
+            <p class="label">Booked days</p>
+        </div>
 
-    <br>
-    <br>
+        <div class="indicator-container">
+            <h1 id="proj_number"></h1>
+            <p class="label">Days in tracker</p>
+        </div>
 
-    <p>Days in tracker: </p>
-    <p id="proj_number"></p>
+        <div class="indicator-container">
+            <h1 id="days_todo"></h1>
+            <p class="label">Days to place in timeline</p>
+        </div>
+    </div>
 
-    <br>
-    <br>
-
-    <p>Days to place in timeline: </p>
-    <p id="days_todo"></p>
+    <div class="spacer-2"></div>
 
 
-    <br>
-    <br>
-
-    <p>Skipped (wrong height): </p>
-    <p id="activity_skipped"></p>
+    <div class="indicator-container">
+        <h2 id="activity_skipped"></h2>
+        <p class="label">Skipped (wrong height)</p>
+    </div>
 
 </body>
 
