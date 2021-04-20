@@ -20,6 +20,7 @@ var activity_totalday_counter = 0;
 var activity_array;
 var activity_project_code;
 var activity_skipped = 0;
+var activity_project_code_text;
 //---- DRAW ---- //
 // const frameWidth = 400
 // const frameHeight = 200
@@ -42,7 +43,7 @@ function main() {
     summary_code_textnode = summary_selected_component.findOne(n => n.name === "summary_project_code");
     summary_color_code = summary_selected_component.findOne(n => n.name === "summary_color_code").fills[0].color;
 
-    console.log("color: " + Math.round(summary_color_code.r*255) + " " + (summary_color_code.g*255));
+    console.log("color: " + Math.round(summary_color_code.r * 255) + " " + (summary_color_code.g * 255));
 
 
     if (summary_code_textnode.type !== 'TEXT') {
@@ -54,36 +55,31 @@ function main() {
     console.log("activity items number: " + activity_array.length);
     //TODO: Gestire la presenza del componente come variant che ha lo stesso nome o comunque mettere in array solo quelli giusti
     activity_array.forEach((activity) => {
-        // activity_project_code = activity.findOne(n => n.name === "activity_project_code");
-        // console.log(activity.children[4]);
-        activity_project_code = activity.children[3].children[0].children[1];
-        // if(( < 1){
-        //     figma.closePlugin("nada")
-        //     return
-        // }
-        var activity_project_code_text = activity_project_code.characters.toUpperCase();
-        // //calculate total days
-        if (activity_project_code_text === summary_code_textnode.characters.toUpperCase()) {
-            // VERSIONE CON COMPONENTE NUOVO
-            // if (!activity.findOne(n => n.name === "activity_timespan")) {
-            //     return
-            // }
-            // var activity_timespan: number = + activity.findOne(n => n.name === "activity_timespan").characters;
-            // activity_totalday_counter += activity_timespan;
-            //VERSIONE DI PASSAGGIO INTERMEDIO
-            if (activity.height == 25) {
-                activity_totalday_counter += .5;
+
+        activity_project_code = activity.findOne(n => n.name === "activity_project_code");
+
+        if (activity_project_code)
+            activity_project_code_text = activity_project_code.characters.toUpperCase();
+
+            if (activity_project_code_text === summary_code_textnode.characters.toUpperCase()) {
+                if (activity.height == 25) {
+                    activity_totalday_counter += .5;
+                }
+                else if (activity.height == 50) {
+                    activity_totalday_counter += 1;
+                }
+                else {
+                    activity_skipped++;
+                }
             }
-            else if (activity.height == 50) {
-                activity_totalday_counter += 1;
-            }
-            else {
-                activity_skipped++;
-            }
+        else {
+            console.log("Activity skipped")
         }
     });
+
     total_days = summary_selected_component.findOne(n => n.name === "summary_total_days").characters;
     var days_todo = total_days - activity_totalday_counter;
+
     //send to UI
     figma.ui.postMessage({
         projectMessage: {
@@ -92,9 +88,9 @@ function main() {
             proj_number: activity_totalday_counter,
             days_todo: days_todo,
             activity_skipped: activity_skipped,
-            project_color_red: Math.round(summary_color_code.r*255),
-            project_color_green: Math.round(summary_color_code.g*255),
-            project_color_blue: Math.round(summary_color_code.b*255)
+            project_color_red: Math.round(summary_color_code.r * 255),
+            project_color_green: Math.round(summary_color_code.g * 255),
+            project_color_blue: Math.round(summary_color_code.b * 255)
         }
     });
 }
@@ -102,6 +98,7 @@ function main() {
 figma.showUI(__html__, { width: 600, height: 280 });
 main();
 // draw();
+
 figma.closePlugin;
 //draw  TEST
 // function draw() {
