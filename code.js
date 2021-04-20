@@ -36,11 +36,17 @@ var activity_project_code_text;
 // -- MAIN -- //
 function main() {
     if (figma.currentPage.selection.length !== 1) {
-        figma.closePlugin("select a 'project-v2' object");
+        figma.closePlugin("select a 'project-summary' component");
         return;
     }
     summary_selected_component = figma.currentPage.selection[0];
     summary_code_textnode = summary_selected_component.findOne(n => n.name === "summary_project_code");
+
+    if(!summary_code_textnode){
+        figma.closePlugin("please select a 'project-summary' component");
+        return;
+    }
+
     summary_color_code = summary_selected_component.findOne(n => n.name === "summary_color_code").fills[0].color;
 
     console.log("color: " + Math.round(summary_color_code.r * 255) + " " + (summary_color_code.g * 255));
