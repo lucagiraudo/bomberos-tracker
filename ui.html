@@ -47,6 +47,18 @@
         clear: both;
     }
 
+    .spacer-3 {
+        height: 72px;
+        width: 100%;
+        clear: both;
+    }
+
+    .spacer-4 {
+        height: 96px;
+        width: 100%;
+        clear: both;
+    }
+
     #prj-code-container {
         display: flex;
         flex-direction: row;
@@ -76,6 +88,17 @@
         background-color: black;
         margin-top: 5px;
         margin-right: 8px;
+    }
+
+    #activity_skipped{
+        font-weight: 800;
+        margin-right: 6px;
+    }
+
+    .skipped-container{
+        opacity: .5;
+        display: flex;
+        flex-direction: row;
     }
 </style>
 
@@ -107,12 +130,11 @@
         </div>
     </div>
 
-    <div class="spacer-2"></div>
+    <div class="spacer-3"></div>
 
 
-    <div class="indicator-container">
-        <h2 id="activity_skipped"></h2>
-        <p class="label">Skipped ('activity' height must be either 25px or 50px)</p>
+    <div class="skipped-container">
+        <p class="label"><p id="activity_skipped"></p> skipped ('activity' height must be either 25px or 50px)</p>
     </div>
 
 </body>
