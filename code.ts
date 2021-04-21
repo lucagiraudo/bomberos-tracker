@@ -18,16 +18,15 @@ let summary_selected_component: any;
 let summary_code_textnode;
 
 //to calculate total days for the project
-var summary_ds_days: number;
-var summary_dj_days: number;
-var summary_team_days: number;
 var total_days;
+var summary_color_code;
 
 // ------- ACTIVITY ------- //
 var activity_totalday_counter = 0;
 var activity_array;
 var activity_project_code: any;
 var activity_skipped = 0;
+var activity_project_code_text;
 
 
 //---- DRAW ---- //
@@ -53,8 +52,14 @@ var activity_skipped = 0;
 
 // -- MAIN -- //
 function main() {
+    //reset all
+    total_days = 0;
+    activity_totalday_counter = 0;
+    activity_skipped = 0;
+
+    //calculate starts
     if (figma.currentPage.selection.length !== 1) {
-        figma.closePlugin("select a 'project-v2' object");
+        figma.closePlugin("select a 'project-summary' component");
         return
     }
 
@@ -62,6 +67,15 @@ function main() {
 
 
     summary_code_textnode = summary_selected_component.findOne(n => n.name === "summary_project_code");
+
+
+    if (!summary_code_textnode) {
+        figma.closePlugin("please select a 'project-summary' component");
+        return;
+    }
+
+    summary_color_code = summary_selected_component.findOne(n => n.name === "summary_color_code").fills[0].color;
+
 
     if (summary_code_textnode.type !== 'TEXT') {
         figma.closePlugin("nodo non riconosciuto (in realtà da fare bene questa gestione di errori)")
@@ -77,37 +91,22 @@ function main() {
 
     //TODO: Gestire la presenza del componente come variant che ha lo stesso nome o comunque mettere in array solo quelli giusti
     activity_array.forEach((activity: any) => {
-        // activity_project_code = activity.findOne(n => n.name === "activity_project_code");
 
-        // console.log(activity.children[4]);
-        activity_project_code = activity.children[4];
-        // if(( < 1){
-        //     figma.closePlugin("nada")
-        //     return
-        // }
+        activity_project_code = activity.findOne(n => n.name === "activity_project_code");
+
 
         var activity_project_code_text = activity_project_code.characters.toUpperCase();
 
         // //calculate total days
         if (activity_project_code_text === summary_code_textnode.characters.toUpperCase()) {
-            // VERSIONE CON COMPONENTE NUOVO
-            // if (!activity.findOne(n => n.name === "activity_timespan")) {
-            //     return
-            // }
 
-            // var activity_timespan: number = + activity.findOne(n => n.name === "activity_timespan").characters;
-            // activity_totalday_counter += activity_timespan;
-
-
-            //VERSIONE DI PASSAGGIO INTERMEDIO
-            if(activity.height == 25){
+            if (activity.height == 25) {
                 activity_totalday_counter += .5;
-            }else if(activity.height == 50){
+            } else if (activity.height == 50) {
                 activity_totalday_counter += 1;
-            }else{
+            } else {
                 activity_skipped++;
             }
-
 
         }
     });
@@ -124,7 +123,10 @@ function main() {
             booked_days: total_days,
             proj_number: activity_totalday_counter,
             days_todo: days_todo,
-            activity_skipped: activity_skipped
+            activity_skipped: activity_skipped,
+            project_color_red: Math.round(summary_color_code.r * 255),
+            project_color_green: Math.round(summary_color_code.g * 255),
+            project_color_blue: Math.round(summary_color_code.b * 255)
         }
     });
 }
@@ -132,56 +134,17 @@ function main() {
 
 // ------- PROGRAM ------- //
 
-figma.showUI(__html__);
-
-
+figma.showUI(__html__, { width: 600, height: 300 });
 main();
 
-// draw();
+figma.ui.onmessage = (message) => {
+    if(message == "calculate"){
+        main();
+    }
+}
 
 figma.closePlugin
 
 
 
 
-
-
-
-
-//draw  TEST
-
-// function draw() {
-//     //test to write element
-//     frame.resizeWithoutConstraints(frameWidth, frameHeight)
-
-//     // Center the frame in our current viewport so we can see it.
-//     frame.x = figma.viewport.center.x - frameWidth / 2
-//     frame.y = figma.viewport.center.y - frameHeight / 2
-
-//     for (var i = 0; i < total_days; i++) {
-//         // The activity
-//         const activity = figma.createRectangle();
-//         frame.appendChild(activity);
-//         activity.x = 20;
-//         activity.y = posY;
-//         activity.resizeWithoutConstraints(activityWidth, activityHeigth)
-//         activity.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
-//         activity.strokes = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0} }]
-//         activity.constraints = { horizontal: 'STRETCH', vertical: 'STRETCH' }
-
-
-//         const label = figma.createText()
-//         frame.appendChild(label)
-//         label.x = 25
-//         label.y = posY + 10
-//         label.resizeWithoutConstraints(right - left + 100, 50)
-//         label.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0} }]
-//         label.characters = summary_code_textnode.characters.toUpperCase();
-//         label.fontSize = 30
-//         label.textAlignHorizontal = 'CENTER'
-//         label.textAlignVertical = 'BOTTOM'
-//         label.constraints = {horizontal: 'STRETCH', vertical: 'STRETCH'}
-
-//         posY += 50;
-//     }
-// }

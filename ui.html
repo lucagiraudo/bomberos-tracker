@@ -35,7 +35,7 @@
         font-size: 40px;
     }
 
-    .spacer {
+    .spacer-1 {
         height: 24px;
         width: 100%;
         clear: both;
@@ -100,18 +100,34 @@
         display: flex;
         flex-direction: row;
     }
+
+    .button{
+        padding: 8px 16px;
+        border-radius: 4px;
+        width: 100%;
+        background-color: #18a0fb;
+        border-color: transparent;
+        background-clip: border-box;
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+        text-transform: uppercase;
+        transition: all .1s ease-in-out;
+        cursor: pointer;
+    }
+
+    .button:hover{
+        background-color: #138bdb;
+    }
 </style>
 
 <body>
     <div id="prj-code-container">
         <div id="project-color"></div>
-        <!-- <h1>[</h1> -->
-        <h1 id="project_name">
-        </h1>
-        <!-- <h1>]</h1> -->
+        <h1 id="project_name"></h1>
     </div>
 
-    <div class="spacer"></div>
+    <div class="spacer-1"></div>
 
     <div class="indicators">
         <div class="indicator-container">
@@ -130,13 +146,26 @@
         </div>
     </div>
 
-    <div class="spacer-3"></div>
+
+    <div class="spacer-1"></div>
 
 
     <div class="skipped-container">
         <p class="label"><p id="activity_skipped"></p> skipped ('activity' height must be either 25px or 50px)</p>
     </div>
 
+    <div class="spacer-2"></div>
+
+
+    <button class="button" id="calculate-button" onclick="calculate()">Calculate</button>
+
+
 </body>
+
+<script>
+    function calculate(){
+        parent.postMessage({ pluginMessage: 'calculate' }, '*')
+    }
+</script>
 
 </html>

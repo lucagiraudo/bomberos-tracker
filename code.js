@@ -10,9 +10,6 @@
 let summary_selected_component;
 let summary_code_textnode;
 //to calculate total days for the project
-var summary_ds_days;
-var summary_dj_days;
-var summary_team_days;
 var total_days;
 var summary_color_code;
 // ------- ACTIVITY ------- //
@@ -35,23 +32,22 @@ var activity_project_code_text;
 // ------- FUNCTIONS ------- //
 // -- MAIN -- //
 function main() {
+    //reset all
+    total_days = 0;
+    activity_totalday_counter = 0;
+    activity_skipped = 0;
+    //calculate starts
     if (figma.currentPage.selection.length !== 1) {
         figma.closePlugin("select a 'project-summary' component");
         return;
     }
     summary_selected_component = figma.currentPage.selection[0];
     summary_code_textnode = summary_selected_component.findOne(n => n.name === "summary_project_code");
-
-    if(!summary_code_textnode){
+    if (!summary_code_textnode) {
         figma.closePlugin("please select a 'project-summary' component");
         return;
     }
-
     summary_color_code = summary_selected_component.findOne(n => n.name === "summary_color_code").fills[0].color;
-
-    console.log("color: " + Math.round(summary_color_code.r * 255) + " " + (summary_color_code.g * 255));
-
-
     if (summary_code_textnode.type !== 'TEXT') {
         figma.closePlugin("nodo non riconosciuto (in realtà da fare bene questa gestione di errori)");
         return;
@@ -61,31 +57,23 @@ function main() {
     console.log("activity items number: " + activity_array.length);
     //TODO: Gestire la presenza del componente come variant che ha lo stesso nome o comunque mettere in array solo quelli giusti
     activity_array.forEach((activity) => {
-
         activity_project_code = activity.findOne(n => n.name === "activity_project_code");
-
-        if (activity_project_code)
-            activity_project_code_text = activity_project_code.characters.toUpperCase();
-
-            if (activity_project_code_text === summary_code_textnode.characters.toUpperCase()) {
-                if (activity.height == 25) {
-                    activity_totalday_counter += .5;
-                }
-                else if (activity.height == 50) {
-                    activity_totalday_counter += 1;
-                }
-                else {
-                    activity_skipped++;
-                }
+        var activity_project_code_text = activity_project_code.characters.toUpperCase();
+        // //calculate total days
+        if (activity_project_code_text === summary_code_textnode.characters.toUpperCase()) {
+            if (activity.height == 25) {
+                activity_totalday_counter += .5;
             }
-        else {
-            console.log("Activity skipped")
+            else if (activity.height == 50) {
+                activity_totalday_counter += 1;
+            }
+            else {
+                activity_skipped++;
+            }
         }
     });
-
     total_days = summary_selected_component.findOne(n => n.name === "summary_total_days").characters;
     var days_todo = total_days - activity_totalday_counter;
-
     //send to UI
     figma.ui.postMessage({
         projectMessage: {
@@ -101,39 +89,11 @@ function main() {
     });
 }
 // ------- PROGRAM ------- //
-figma.showUI(__html__, { width: 600, height: 280 });
+figma.showUI(__html__, { width: 600, height: 300 });
 main();
-// draw();
-
+figma.ui.onmessage = (message) => {
+    if (message == "calculate") {
+        main();
+    }
+};
 figma.closePlugin;
-//draw  TEST
-// function draw() {
-//     //test to write element
-//     frame.resizeWithoutConstraints(frameWidth, frameHeight)
-//     // Center the frame in our current viewport so we can see it.
-//     frame.x = figma.viewport.center.x - frameWidth / 2
-//     frame.y = figma.viewport.center.y - frameHeight / 2
-//     for (var i = 0; i < total_days; i++) {
-//         // The activity
-//         const activity = figma.createRectangle();
-//         frame.appendChild(activity);
-//         activity.x = 20;
-//         activity.y = posY;
-//         activity.resizeWithoutConstraints(activityWidth, activityHeigth)
-//         activity.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
-//         activity.strokes = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0} }]
-//         activity.constraints = { horizontal: 'STRETCH', vertical: 'STRETCH' }
-//         const label = figma.createText()
-//         frame.appendChild(label)
-//         label.x = 25
-//         label.y = posY + 10
-//         label.resizeWithoutConstraints(right - left + 100, 50)
-//         label.fills = [{ type: 'SOLID', color: {r: 0, g: 0, b: 0} }]
-//         label.characters = summary_code_textnode.characters.toUpperCase();
-//         label.fontSize = 30
-//         label.textAlignHorizontal = 'CENTER'
-//         label.textAlignVertical = 'BOTTOM'
-//         label.constraints = {horizontal: 'STRETCH', vertical: 'STRETCH'}
-//         posY += 50;
-//     }
-// }
