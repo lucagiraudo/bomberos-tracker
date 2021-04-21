@@ -58,17 +58,19 @@ function main() {
     //TODO: Gestire la presenza del componente come variant che ha lo stesso nome o comunque mettere in array solo quelli giusti
     activity_array.forEach((activity) => {
         activity_project_code = activity.findOne(n => n.name === "activity_project_code");
-        var activity_project_code_text = activity_project_code.characters.toUpperCase();
-        // //calculate total days
-        if (activity_project_code_text === summary_code_textnode.characters.toUpperCase()) {
-            if (activity.height == 25) {
-                activity_totalday_counter += .5;
-            }
-            else if (activity.height == 50) {
-                activity_totalday_counter += 1;
-            }
-            else {
-                activity_skipped++;
+        if (activity_project_code) {
+            var activity_project_code_text = activity_project_code.characters.toUpperCase();
+            // //calculate total days
+            if (activity_project_code_text === summary_code_textnode.characters.toUpperCase()) {
+                if (activity.height == 25) {
+                    activity_totalday_counter += .5;
+                }
+                else if (activity.height == 50) {
+                    activity_totalday_counter += 1;
+                }
+                else {
+                    activity_skipped++;
+                }
             }
         }
     });

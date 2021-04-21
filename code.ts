@@ -94,20 +94,21 @@ function main() {
 
         activity_project_code = activity.findOne(n => n.name === "activity_project_code");
 
+        if(activity_project_code){
+            var activity_project_code_text = activity_project_code.characters.toUpperCase();
 
-        var activity_project_code_text = activity_project_code.characters.toUpperCase();
-
-        // //calculate total days
-        if (activity_project_code_text === summary_code_textnode.characters.toUpperCase()) {
-
-            if (activity.height == 25) {
-                activity_totalday_counter += .5;
-            } else if (activity.height == 50) {
-                activity_totalday_counter += 1;
-            } else {
-                activity_skipped++;
+            // //calculate total days
+            if (activity_project_code_text === summary_code_textnode.characters.toUpperCase()) {
+    
+                if (activity.height == 25) {
+                    activity_totalday_counter += .5;
+                } else if (activity.height == 50) {
+                    activity_totalday_counter += 1;
+                } else {
+                    activity_skipped++;
+                }
+    
             }
-
         }
     });
 
