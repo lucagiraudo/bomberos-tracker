@@ -31,7 +31,7 @@ var activity_project_code_text;
 // var activityHeigth = 25;
 // ------- FUNCTIONS ------- //
 // -- MAIN -- //
-function main() {
+function calculate() {
     //reset all
     total_days = 0;
     activity_totalday_counter = 0;
@@ -92,10 +92,9 @@ function main() {
 }
 // ------- PROGRAM ------- //
 figma.showUI(__html__, { width: 600, height: 300 });
-main();
 figma.ui.onmessage = (message) => {
     if (message == "calculate") {
-        main();
+        calculate();
     }
 };
 figma.closePlugin;
