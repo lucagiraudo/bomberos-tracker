@@ -18,17 +18,8 @@ var activity_array;
 var activity_project_code;
 var activity_skipped = 0;
 var activity_project_code_text;
-//---- DRAW ---- //
-// const frameWidth = 400
-// const frameHeight = 200
-// const chartX = 25
-// const chartY = 50
-// const chartWidth = frameWidth - 50
-// const chartHeight = frameHeight - 50
-// const frame = figma.createFrame()
-// var posY = 0;
-// var activityWidth = 200;
-// var activityHeigth = 25;
+// Figma file to refer to for components:
+// https://www.figma.com/community/file/969639692881611105/Planner---Bomberos
 // ------- FUNCTIONS ------- //
 // -- MAIN -- //
 function calculate() {
@@ -55,7 +46,6 @@ function calculate() {
     //search for all activity with selected project code
     activity_array = figma.currentPage.findAll(n => n.name === "activity");
     console.log("activity items number: " + activity_array.length);
-    //TODO: Gestire la presenza del componente come variant che ha lo stesso nome o comunque mettere in array solo quelli giusti
     activity_array.forEach((activity) => {
         activity_project_code = activity.findOne(n => n.name === "activity_project_code");
         if (activity_project_code) {
