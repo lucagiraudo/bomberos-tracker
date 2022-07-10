@@ -10,12 +10,14 @@
 let selected_component;
 let code_textnode;
 var color_code;
+var project_type;
 // ------- SUMMARY ------- //
 var summary_array;
 var summary_project_code;
 //to calculate total days for the project
 var total_days;
 // ------- ACTIVITY ------- //
+var activity_totalhour_counter = 0;
 var activity_totalday_counter = 0;
 var activity_array;
 var activity_project_code;
@@ -28,7 +30,7 @@ var activity_project_code_text;
 function calculate() {
     //reset all
     total_days = 0;
-    activity_totalday_counter = 0;
+    activity_totalhour_counter = 0;
     activity_skipped = 0;
     //calculate starts
     if (figma.currentPage.selection.length !== 1) {
@@ -36,6 +38,7 @@ function calculate() {
         return;
     }
     selected_component = figma.currentPage.selection[0];
+    project_type = selected_component.componentProperties["progetto"].value;
     code_textnode = selected_component.findOne(n => n.name === "summary_project_code");
     if (!code_textnode) {
         //check if user has selected an "activity" component
@@ -53,7 +56,7 @@ function calculate() {
         return;
     }
     //search for all activity with selected project code
-    activity_array = figma.currentPage.findAll(n => n.name === "activity");
+    activity_array = figma.currentPage.findAll(n => n.name === "activity_v2");
     console.log("activity items number: " + activity_array.length);
     activity_array.forEach((activity) => {
         activity_project_code = activity.findOne(n => n.name === "activity_project_code");
@@ -61,18 +64,12 @@ function calculate() {
             var activity_project_code_text = activity_project_code.characters.toUpperCase();
             // //calculate total days
             if (activity_project_code_text === code_textnode.characters.toUpperCase()) {
-                if (activity.height == 25) {
-                    activity_totalday_counter += .5;
-                }
-                else if (activity.height == 50) {
-                    activity_totalday_counter += 1;
-                }
-                else {
-                    activity_skipped++;
-                }
+                activity_totalhour_counter += +activity.componentProperties["ore"].value;
             }
         }
     });
+    activity_totalday_counter = activity_totalhour_counter / 8;
+    console.log("hours: " + activity_totalhour_counter);
     total_days = selected_component.findOne(n => n.name === "summary_total_days");
     if (total_days) {
         //summary_case
@@ -95,7 +92,7 @@ function calculate() {
             project_name: code_textnode.characters,
             booked_days: total_days,
             proj_number: activity_totalday_counter,
-            days_todo: days_todo,
+            project_type: project_type,
             activity_skipped: activity_skipped,
             project_color_red: Math.round(color_code.r * 255),
             project_color_green: Math.round(color_code.g * 255),
@@ -106,7 +103,7 @@ function calculate() {
 function calculate_by_summary() {
 }
 // ------- PROGRAM ------- //
-figma.showUI(__html__, { width: 600, height: 300 });
+figma.showUI(__html__, { width: 280, height: 400 });
 figma.ui.onmessage = (message) => {
     if (message == "calculate") {
         calculate();

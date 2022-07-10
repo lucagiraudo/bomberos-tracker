@@ -16,6 +16,7 @@
 let selected_component: any;
 let code_textnode;
 var color_code;
+var project_type;
 
 // ------- SUMMARY ------- //
 var summary_array;
@@ -26,11 +27,13 @@ var total_days;
 
 
 // ------- ACTIVITY ------- //
+var activity_totalhour_counter = 0;
 var activity_totalday_counter = 0;
 var activity_array;
 var activity_project_code: any;
 var activity_skipped = 0;
 var activity_project_code_text;
+
 
 
 
@@ -47,7 +50,8 @@ var activity_project_code_text;
 function calculate() {
     //reset all
     total_days = 0;
-    activity_totalday_counter = 0;
+    activity_totalhour_counter = 0;
+    
     activity_skipped = 0;
 
     //calculate starts
@@ -58,6 +62,7 @@ function calculate() {
 
     selected_component = figma.currentPage.selection[0];
 
+    project_type = selected_component.componentProperties["progetto"].value
 
     code_textnode = selected_component.findOne(n => n.name === "summary_project_code");
 
@@ -84,7 +89,7 @@ function calculate() {
 
 
     //search for all activity with selected project code
-    activity_array = figma.currentPage.findAll(n => n.name === "activity");
+    activity_array = figma.currentPage.findAll(n => n.name === "activity_v2");
 
 
     console.log("activity items number: " + activity_array.length);
@@ -99,18 +104,13 @@ function calculate() {
 
             // //calculate total days
             if (activity_project_code_text === code_textnode.characters.toUpperCase()) {
-    
-                if (activity.height == 25) {
-                    activity_totalday_counter += .5;
-                } else if (activity.height == 50) {
-                    activity_totalday_counter += 1;
-                } else {
-                    activity_skipped++;
-                }
-    
+                activity_totalhour_counter += +activity.componentProperties["ore"].value
             }
         }
     });
+
+    activity_totalday_counter = activity_totalhour_counter / 8;
+    console.log("hours: " + activity_totalhour_counter);
 
 
     total_days = selected_component.findOne(n => n.name === "summary_total_days")
@@ -140,7 +140,7 @@ function calculate() {
             project_name: code_textnode.characters,
             booked_days: total_days,
             proj_number: activity_totalday_counter,
-            days_todo: days_todo,
+            project_type: project_type,
             activity_skipped: activity_skipped,
             project_color_red: Math.round(color_code.r * 255),
             project_color_green: Math.round(color_code.g * 255),
@@ -155,7 +155,7 @@ function calculate_by_summary(){
 
 // ------- PROGRAM ------- //
 
-figma.showUI(__html__, { width: 600, height: 300 });
+figma.showUI(__html__, { width: 280, height: 400 });
 
 figma.ui.onmessage = (message) => {
     if(message == "calculate"){

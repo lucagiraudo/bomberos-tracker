@@ -3,8 +3,7 @@
         document.getElementById('project_name').innerHTML = event.data.pluginMessage.projectMessage.project_name;
         document.getElementById('proj_number').innerHTML = event.data.pluginMessage.projectMessage.proj_number;
         document.getElementById('booked_days').innerHTML = event.data.pluginMessage.projectMessage.booked_days;
-        document.getElementById('days_todo').innerHTML = event.data.pluginMessage.projectMessage.days_todo;
-        document.getElementById('activity_skipped').innerHTML = event.data.pluginMessage.projectMessage.activity_skipped;
+        document.getElementById('project_type').innerHTML = event.data.pluginMessage.projectMessage.project_type;
 
         document.getElementById('project-color').style.backgroundColor = 'rgb(' + event.data.pluginMessage.projectMessage.project_color_red + ',' + event.data.pluginMessage.projectMessage.project_color_green + ',' + event.data.pluginMessage.projectMessage.project_color_blue + ')';
         // console.log(event.data.pluginMessage.selection.length);
@@ -31,8 +30,13 @@
         margin: 0;
     }
 
+    p{
+        font-size: 14px;
+        opacity: 0.8;
+    }
+
     h1{
-        font-size: 40px;
+        font-size: 22px;
     }
 
     .spacer-1 {
@@ -62,6 +66,11 @@
     #prj-code-container {
         display: flex;
         flex-direction: row;
+    }
+
+    #prj-info-container {
+        display: flex;
+        flex-direction: column;
     }
 
     .indicator-container {
@@ -124,7 +133,10 @@
 <body>
     <div id="prj-code-container">
         <div id="project-color"></div>
-        <h1 id="project_name">Select and calculate</h1>
+        <div id="prj-info-container">
+            <h1 id="project_name">Select and calculate</h1>
+            <p id="project_type"></p>
+        </div>
     </div>
 
     <div class="spacer-1"></div>
@@ -139,19 +151,6 @@
             <h1 id="proj_number">00</h1>
             <p class="label">Days in tracker</p>
         </div>
-
-        <div class="indicator-container">
-            <h1 id="days_todo">00</h1>
-            <p class="label">Days to place in timeline</p>
-        </div>
-    </div>
-
-
-    <div class="spacer-1"></div>
-
-
-    <div class="skipped-container">
-        <p class="label"><p id="activity_skipped">0</p> skipped ('activity' height must be either 25px or 50px)</p>
     </div>
 
     <div class="spacer-2"></div>
