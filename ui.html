@@ -29,11 +29,16 @@
             document.getElementById('project_type').innerHTML = event.data.pluginMessage.projectInfos.project_type;
             document.getElementById('project-color').style.backgroundColor = 'rgb(' + event.data.pluginMessage.projectInfos.project_color_red + ',' + event.data.pluginMessage.projectInfos.project_color_green + ',' + event.data.pluginMessage.projectInfos.project_color_blue + ')';
             
-            if(event.data.pluginMessage.projectInfos.from = "activity"){
+            if(event.data.pluginMessage.projectInfos.from === "activity"){
                 document.getElementById('activity_person').innerHTML = activity_person;
                 document.querySelector('#label_person').innerHTML = activity_person;
-            }else{
-                document.getElementById('booked_days').innerHTML = event.data.pluginMessage.projectMessage.booked_days;
+                document.getElementById('team-button').style.width = "50%";
+                document.getElementById('person-button').style.display = "block";
+            }else if(event.data.pluginMessage.projectInfos.from === "summary"){
+                console.log("summaryyyyyyyy");
+                document.getElementById('person-button').style.display = "none";
+                document.getElementById('team-button').style.width = "100%";
+                document.getElementById('booked_days').innerHTML = event.data.pluginMessage.projectInfos.booked_days;
             }
         }
 

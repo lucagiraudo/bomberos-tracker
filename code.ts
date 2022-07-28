@@ -130,7 +130,8 @@ function updateSelectedElementInfos(){
                 }
             });
         //booked days only with summary component
-        }else if(selected_component.name === "project-summary"){
+        }else if(selected_component.name === "project-summary-v2"){
+            console.log("Dentro a summary")
             booked_days = selected_component.findOne(n => n.name === "summary_booked_days")
 
             //send to UI
