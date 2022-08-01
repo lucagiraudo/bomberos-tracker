@@ -5,25 +5,31 @@
         if(event.data.pluginMessage.loaderStatus){
             if(event.data.pluginMessage.loaderStatus.status){
                 document.getElementById('loader-container').style.opacity = 1;
-                console.log("loader attivo")
+                // console.log("loader attivo")
             }
         }else if(event.data.pluginMessage.daysCount){
+            document.getElementById('booked_days').innerHTML = event.data.pluginMessage.daysCount.booked_days;
+
+            var person_days_list_list = "";
+
+            event.data.pluginMessage.daysCount.persons_days_array.forEach((person_days) => {
+                person_days_list_list += '<li>' + person_days[0] + ': ' + person_days[1] + 'gg</li>'
+                
+            });
+            document.getElementById('person_days_list').innerHTML = person_days_list_list;
+
             if(event.data.pluginMessage.daysCount.from === "Package"){
-                // document.getElementById('booked_days_container').style.opacity = 1;
-                // document.getElementById('switch-container').style.opacity = 0;
-                document.getElementById('booked_days').innerHTML = event.data.pluginMessage.daysCount.booked_days;
                 document.getElementById('label_bookedDays').innerHTML = "Total package";
                 document.getElementById('used_day_counter').innerHTML = event.data.pluginMessage.daysCount.used_day_counter;
+
             }else if(event.data.pluginMessage.daysCount.from === "Monthly support"){
-                // document.getElementById('booked_days_container').style.opacity = 0;
-                document.getElementById('booked_days').innerHTML = event.data.pluginMessage.daysCount.booked_days;
                 document.getElementById('label_bookedDays').innerHTML = "gg/sett";
                 document.getElementById('switch-container').style.opacity = 1;
                 document.getElementById('used_day_counter').innerHTML = event.data.pluginMessage.daysCount.used_day_counter;
             }
 
             document.getElementById('loader-container').style.opacity = 0;
-            console.log("loader disattivo")
+            // console.log("loader disattivo")
 
         }else if(event.data.pluginMessage.projectInfos){
             activity_person = innerHTML = event.data.pluginMessage.projectInfos.activity_person;
@@ -38,7 +44,6 @@
                 document.getElementById('team-button').style.width = "50%";
                 document.getElementById('person-button').style.display = "block";
             }else if(event.data.pluginMessage.projectInfos.from === "summary"){
-                console.log("summaryyyyyyyy");
                 document.getElementById('person-button').style.display = "none";
                 document.getElementById('team-button').style.width = "100%";
                 document.getElementById('booked_days').innerHTML = event.data.pluginMessage.projectInfos.booked_days;
@@ -305,6 +310,8 @@
             <p id="label_bookedDays">Package</p>
         </div>
     </div>
+
+    <ul id="person_days_list"></ul>
 
     <div id="loader-container">
         <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
