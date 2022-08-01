@@ -9,12 +9,15 @@
             }
         }else if(event.data.pluginMessage.daysCount){
             if(event.data.pluginMessage.daysCount.from === "Package"){
-                document.getElementById('booked_days_container').style.opacity = 1;
+                // document.getElementById('booked_days_container').style.opacity = 1;
                 // document.getElementById('switch-container').style.opacity = 0;
                 document.getElementById('booked_days').innerHTML = event.data.pluginMessage.daysCount.booked_days;
+                document.getElementById('label_bookedDays').innerHTML = "Total package";
                 document.getElementById('used_day_counter').innerHTML = event.data.pluginMessage.daysCount.used_day_counter;
             }else if(event.data.pluginMessage.daysCount.from === "Monthly support"){
-                document.getElementById('booked_days_container').style.opacity = 0;
+                // document.getElementById('booked_days_container').style.opacity = 0;
+                document.getElementById('booked_days').innerHTML = event.data.pluginMessage.daysCount.booked_days;
+                document.getElementById('label_bookedDays').innerHTML = "gg/sett";
                 document.getElementById('switch-container').style.opacity = 1;
                 document.getElementById('used_day_counter').innerHTML = event.data.pluginMessage.daysCount.used_day_counter;
             }
@@ -298,8 +301,8 @@
         </div>
         
         <div class="indicator-container" id="booked_days_container">
-            <h1 id="booked_days">00</h1>
-            <p class="label">Giorni <br>Package</p>
+            <h1 id="booked_days">insert</h1>
+            <p id="label_bookedDays">Package</p>
         </div>
     </div>
 

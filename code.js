@@ -75,6 +75,7 @@ function updateSelectedElementInfos() {
         console.log("selected project type: " + project_type);
         //initials only with activity component
         if (selected_component.name === "activity-v2") {
+            console.log("Dentro activity");
             activity_person = selected_component.findOne(n => n.name === "initials").characters;
             //send to UI
             figma.ui.postMessage({
@@ -92,7 +93,8 @@ function updateSelectedElementInfos() {
         }
         else if (selected_component.name === "project-summary-v2") {
             console.log("Dentro a summary");
-            booked_days = selected_component.findOne(n => n.name === "summary_booked_days");
+            booked_days = selected_component.findOne(n => n.name === "summary_booked_days").characters;
+            console.log("booked_days: " + booked_days);
             //send to UI
             figma.ui.postMessage({
                 projectInfos: {
@@ -142,43 +144,59 @@ function calculate() {
         }
     });
     used_day_counter = totalhour_counter / 8;
-    console.log("hours: " + totalhour_counter);
-    console.log("days: " + used_day_counter);
-    //booked days only if Package project type
-    if (project_type === "Package") {
-        console.log("sending Package");
-        if (booked_days) {
-            //summary_case
-            booked_days = booked_days.characters;
+    // COUNT BOOKED DAYS
+    summary_array = figma.currentPage.findAll(n => n.name === "project-summary-v2");
+    summary_array.forEach((summary) => {
+        summary_project_code = summary.findOne(n => n.name === "project_code").characters.toUpperCase();
+        console.log("code: " + summary_project_code);
+        if (summary_project_code === code_textnode.characters.toUpperCase()) {
+            console.log("i'm in");
+            booked_days = summary.findOne(n => n.name === "summary_booked_days").characters;
         }
-        else {
-            //activity case, we need to find the summary
-            summary_array = figma.currentPage.findAll(n => n.name === "project-summary-v2");
-            summary_array.forEach((summary) => {
-                summary_project_code = summary.findOne(n => n.name === "project_code").characters.toUpperCase;
-                if (summary_project_code === code_textnode.characters.toUpperCase()) {
-                    console.log("i'm in");
-                    booked_days = summary.findOne(n => n.name === "summary_booked_days").characters;
-                }
-            });
+    });
+    //SENDING TO UI
+    console.log("sending project type: " + project_type);
+    figma.ui.postMessage({
+        daysCount: {
+            from: project_type,
+            booked_days: booked_days,
+            used_day_counter: used_day_counter,
         }
-        //send to UI
-        figma.ui.postMessage({
-            daysCount: {
-                from: "Package",
-                booked_days: booked_days,
-                used_day_counter: used_day_counter,
-            }
-        });
-    }
-    else if ((project_type === "Monthly support")) {
-        console.log("sending Monthly support");
-        //send to UI
-        figma.ui.postMessage({
-            daysCount: {
-                from: "Monthly support",
-                used_day_counter: used_day_counter,
-            }
-        });
-    }
+    });
+    // //booked days only if Package project type
+    // if(project_type === "Package"){
+    //     console.log("sending Package")
+    //     if(booked_days){
+    //         //summary_case
+    //         console.log("summary case")
+    //         booked_days = booked_days.characters;
+    //     }else{
+    //         //activity case, we need to find the summary
+    //         summary_array = figma.currentPage.findAll(n => n.name === "project-summary-v2");
+    //         summary_array.forEach((summary: any) => {
+    //             summary_project_code = summary.findOne(n => n.name === "project_code").characters.toUpperCase;
+    //             if(summary_project_code === code_textnode.characters.toUpperCase()){
+    //                 console.log("i'm in")
+    //                 booked_days = summary.findOne(n => n.name === "summary_booked_days").characters;
+    //             }
+    //         });
+    //     }
+    //     //send to UI
+    //     figma.ui.postMessage({
+    //         daysCount: {
+    //             from: "Package",
+    //             booked_days: booked_days,
+    //             used_day_counter: used_day_counter,
+    //         }
+    //     });
+    // }else if((project_type === "Monthly support")){
+    //     console.log("sending Monthly support")
+    //     //send to UI
+    //     figma.ui.postMessage({
+    //         daysCount: {
+    //             from: "Monthly support",
+    //             used_day_counter: used_day_counter,
+    //         }
+    //     });
+    // }
 }
